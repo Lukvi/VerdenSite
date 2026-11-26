@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia: colocar a Clave no ar</title>
+<style>
+    :root { --fundo:#14110e; --papel:#e8dbbc; --tinta:#2b2118; --ouro:#b8923f; --selo:#8a2323; --claro:#ebe0c8; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--fundo); color:var(--claro); font-family: Georgia, 'Times New Roman', serif; font-size:1.1rem; line-height:1.65; }
+    main { max-width: 760px; margin: 0 auto; padding: 36px 18px 90px; }
+    h1 { font-size: 2rem; margin: 0 0 6px; letter-spacing:.03em; }
+    h2 { font-size: 1.3rem; margin: 0 0 10px; color: var(--ouro); }
+    .sub { color:#a89a82; margin: 0 0 28px; }
+    .passo { background:#1d1813; border:1px solid #3a2f23; border-radius:8px; padding:22px 24px; margin-bottom:18px; }
+    .passo ol, .passo ul { padding-left: 1.3em; margin: 8px 0 0; } .passo li { margin: 6px 0; }
+    .num { display:inline-grid; place-items:center; width:34px; height:34px; border-radius:50%; background:var(--selo); color:#fff4e2; margin-right:10px; font-size:1rem; }
+    code, .copiar { background:#0e0c0a; border:1px solid #3a2f23; border-radius:4px; padding:1px 7px; font-family: Consolas, monospace; font-size:.92em; color:#e6c978; word-break: break-all; }
+    .aviso { border-left:4px solid var(--ouro); background:#251d10; padding:12px 16px; border-radius:0 6px 6px 0; margin-top:14px; }
+    .perigo { border-left-color:#c4493f; background:#2a1512; }
+    .ok { border-left-color:#4f8a5d; background:#12221a; }
+    a { color:#e6c978; }
+    .tempo { color:#a89a82; font-size:.95rem; margin-left:6px; font-weight:normal; }
+    details { margin-top:10px; } summary { cursor:pointer; color:#e6c978; }
+    kbd { background:#0e0c0a; border:1px solid #3a2f23; border-bottom-width:2px; border-radius:4px; padding:0 6px; font-size:.9em; }
+</style>
+</head>
+<body>
+<main>
+    <h1>Colocar a Clave no ar</h1>
+    <p class="sub">Passo a passo para quem não mexe em código. Dura cerca de 30 a 40 minutos, uma vez só. Tudo usa planos gratuitos.</p>
+
+    <div class="passo ok">
+        <h2>Antes de tudo: veja funcionando</h2>
+        <p style="margin:0">Descompacte a pasta e dê dois cliques em <code>index.html</code>. Ele abre em <b>modo demonstração</b>, com posts e fichas de exemplo, e você pode testar tudo. Nada do que você fizer ali vai para a rede real: fica só no seu navegador.</p>
+        <p style="margin:10px 0 0">Os passos abaixo ligam a rede de verdade, com login do Discord e dados compartilhados.</p>
+    </div>
+
+    <div class="passo">
+        <h2><span class="num">1</span>Criar o banco de dados <span class="tempo">5 min</span></h2>
+        <p style="margin:0">Usamos o <b>Supabase</b>, um serviço que guarda posts, fichas e imagens e cuida do login.</p>
+        <ol>
+            <li>Entre em <a href="https://supabase.com" target="_blank" rel="noopener">supabase.com</a> e crie uma conta (pode ser com o GitHub ou com e-mail).</li>
+            <li>Clique em <b>New project</b>.</li>
+            <li>Nome: <code>clave</code>. Crie uma senha do banco e <b>guarde num lugar seguro</b> (você quase nunca vai usar).</li>
+            <li>Região: escolha <b>South America (São Paulo)</b>, se aparecer, para ficar mais rápido.</li>
+            <li>Clique em <b>Create new project</b> e espere uns 2 minutos até terminar de preparar.</li>
+        </ol>
+    </div>
+
+    <div class="passo">
+        <h2><span class="num">2</span>Criar as tabelas <span class="tempo">3 min</span></h2>
+        <ol>
+            <li>No menu da esquerda, abra o <b>SQL Editor</b>.</li>
+            <li>Clique em <b>New query</b> (nova consulta).</li>
+            <li>Abra o arquivo <code>supabase.sql</code> (pode ser no Bloco de Notas), selecione tudo (<kbd>Ctrl</kbd>+<kbd>A</kbd>), copie (<kbd>Ctrl</kbd>+<kbd>C</kbd>) e cole no editor.</li>
+            <li>Clique em <b>Run</b>. Deve aparecer <i>Success</i>. Se perguntar sobre "RLS" ou segurança, pode confirmar.</li>
+        </ol>
+        <div class="aviso">Se der erro, tire um print da mensagem e me mande. Pode rodar o arquivo de novo sem medo: ele não apaga nada.</div>
+    </div>
+
+    <div class="passo">
+        <h2><span class="num">3</span>Ligar o login com Discord <span class="tempo">10 min</span></h2>
+        <p style="margin:0">Primeiro, pegue o endereço de retorno no Supabase:</p>
+        <ol>
+            <li>No Supabase, vá em <b>Authentication</b> e depois em <b>Providers</b> (ou <b>Sign In / Providers</b>) e abra <b>Discord</b>.</li>
+            <li>Copie o endereço que aparece como <b>Callback URL</b>. Ele termina em <code>/auth/v1/callback</code>.</li>
+        </ol>
+        <p style="margin:14px 0 0">Agora crie o aplicativo no Discord:</p>
+        <ol>
+            <li>Entre em <a href="https://discord.com/developers/applications" target="_blank" rel="noopener">discord.com/developers/applications</a> com a sua conta.</li>
+            <li><b>New Application</b>, nome <code>Clave Rede</code> (pode ser outro), aceite os termos.</li>
+            <li>No menu da esquerda, abra <b>OAuth2</b>.</li>
+            <li>Em <b>Redirects</b>, clique em <b>Add Redirect</b>, cole o endereço copiado do Supabase e salve (<b>Save Changes</b>).</li>
+            <li>Ainda em OAuth2, copie o <b>Client ID</b>. Clique em <b>Reset Secret</b> e copie o <b>Client Secret</b> (ele só aparece uma vez).</li>
+            <li>Volte ao Supabase, na tela do provedor Discord: ative <b>Enable Sign in with Discord</b>, cole o Client ID e o Client Secret e clique em <b>Save</b>.</li>
+        </ol>
+        <div class="aviso perigo">O Client Secret é como uma senha. Não mande para ninguém e não cole em nenhum arquivo do site.</div>
+        <div class="aviso">Esse aplicativo do Discord é só para o login do site. Ele é <b>separado</b> do seu bot, e o bot continua como está.</div>
+    </div>
+
+    <div class="passo">
+        <h2><span class="num">4</span>Copiar as duas chaves do projeto <span class="tempo">3 min</span></h2>
+        <ol>
+            <li>No Supabase, abra <b>Project Settings</b> (a engrenagem) e depois <b>API</b> (em versões novas pode se chamar <b>API Keys</b>).</li>
+            <li>Copie o <b>Project URL</b> (algo como <code>https://abcdxyz.supabase.co</code>).</li>
+            <li>Copie a chave <b>anon public</b> (ou <b>publishable</b>). É uma sequência longa de letras e números.</li>
+            <li>Abra o arquivo <code>config.js</code> no Bloco de Notas e cole entre as aspas:
+                <pre style="background:#0e0c0a;border:1px solid #3a2f23;border-radius:6px;padding:12px;overflow:auto;font-size:.9rem;color:#e6c978">SUPABASE_URL: "https://abcdxyz.supabase.co",
+SUPABASE_ANON_KEY: "eyJhbGciOi...",</pre>
+                Salve o arquivo.</li>
+        </ol>
+        <div class="aviso perigo">Use só a chave <b>anon / publishable</b>. A chave <b>service_role</b> (ou <b>secret</b>) <b>nunca</b> deve ir para o site.</div>
+    </div>
+
+    <div class="passo">
+        <h2><span class="num">5</span>Publicar o site <span class="tempo">5 min</span></h2>
+        <p style="margin:0">O jeito mais simples é o <b>Netlify</b>:</p>
+        <ol>
+            <li>Entre em <a href="https://app.netlify.com/drop" target="_blank" rel="noopener">app.netlify.com/drop</a> (crie uma conta grátis, se pedir).</li>
+            <li>Arraste a <b>pasta inteira</b> da Clave (com o <code>config.js</code> já preenchido) para a área indicada.</li>
+            <li>Em alguns segundos você recebe um endereço como <code>https://nome-aleatorio.netlify.app</code>. Se quiser, troque o nome em <b>Site configuration</b> e depois <b>Change site name</b>.</li>
+        </ol>
+        <details><summary>Prefere o GitHub Pages?</summary>
+            <p>Também funciona: crie um repositório público, envie todos os arquivos da pasta e ative o <b>Pages</b> em <b>Settings</b> e <b>Pages</b>. O endereço será <code>https://seunome.github.io/repositorio</code>. Atenção: como o repositório é público, o <code>config.js</code> ficará visível. Isso é seguro com a chave <i>anon</i>, mas nunca coloque a chave secreta.</p></details>
+    </div>
+
+    <div class="passo">
+        <h2><span class="num">6</span>Avisar o Supabase qual é o endereço do site <span class="tempo">2 min</span></h2>
+        <ol>
+            <li>No Supabase: <b>Authentication</b> e depois <b>URL Configuration</b>.</li>
+            <li>Em <b>Site URL</b>, cole o endereço do seu site (ex.: <code>https://clave-verden.netlify.app</code>).</li>
+            <li>Em <b>Redirect URLs</b>, clique em <b>Add URL</b> e adicione o mesmo endereço, e também uma versão com <code>/**</code> no final (ex.: <code>https://clave-verden.netlify.app/**</code>). Salve.</li>
+        </ol>
+        <div class="aviso">Sem esse passo, o botão "Entrar com Discord" volta com erro de redirecionamento.</div>
+    </div>
+
+    <div class="passo ok">
+        <h2><span class="num">7</span>Primeiro acesso</h2>
+        <ol>
+            <li><b>Você entra primeiro.</b> Abra o site e clique em <b>Entrar com Discord</b>. A primeira pessoa a entrar vira <b>Mestre</b> automaticamente.</li>
+            <li>Mande o link para os jogadores. Quando eles entrarem, caem numa <b>sala de espera</b>.</li>
+            <li>Na aba <b>Mesa</b>, você vê quem está aguardando e clica em <b>Aprovar entrada</b>. Quem não for aprovado não vê nada da mesa (assim, estranhos que descobrirem o link não leem o conteúdo).</li>
+            <li>Cada jogador pode importar o <code>.json</code> do site de fichas antigo em <b>Registros</b>, com <b>Importar dossiê</b>.</li>
+        </ol>
+    </div>
+
+    <div class="passo">
+        <h2>Se algo der errado</h2>
+        <ul>
+            <li><b>"redirect_uri" ou erro ao voltar do Discord:</b> confira os passos 3 (endereço no Discord) e 6 (endereços no Supabase). Os endereços precisam ser exatamente iguais, sem espaços.</li>
+            <li><b>"Seu perfil ainda não foi criado":</b> o <code>supabase.sql</code> não rodou por inteiro. Rode de novo (passo 2) e saia e entre no site.</li>
+            <li><b>Imagem não envia:</b> também costuma ser o <code>supabase.sql</code>. Rode de novo.</li>
+            <li><b>Site mostra "Modo demonstração":</b> o <code>config.js</code> está vazio ou não foi publicado de novo depois de preenchido. Arraste a pasta de novo no Netlify.</li>
+            <li><b>Editou algo e o site não mudou:</b> no Netlify, arraste a pasta de novo. Se ainda assim parecer igual, atualize com <kbd>Ctrl</kbd>+<kbd>F5</kbd>.</li>
+            <li><b>Quero tornar outra pessoa Mestre:</b> na aba <b>Mesa</b>, botão <b>Tornar Mestre</b>.</li>
+        </ul>
+        <div class="aviso">Qualquer erro: tire um print da mensagem (e do console, se souber abrir com <kbd>F12</kbd>) e me mande. Eu corrijo.</div>
+    </div>
+
+    <div class="passo">
+        <h2>Bom saber</h2>
+        <ul>
+            <li><b>Planos gratuitos têm limites.</b> Para uma mesa pequena sobra espaço. Em geral, o Supabase gratuito <b>pausa o projeto depois de cerca de uma semana sem uso</b>. Se acontecer, entre no painel e clique em <b>Restore</b>; nada se perde. Confira as regras atuais no site deles.</li>
+            <li><b>As imagens são reduzidas</b> automaticamente antes de subir, para economizar espaço.</li>
+            <li><b>Vídeos</b> entram por link do YouTube ou Vimeo e tocam dentro do post.</li>
+            <li><b>Cópia de segurança:</b> no painel do Supabase, em <b>Table Editor</b>, dá para exportar as tabelas. Cada jogador também pode baixar a própria ficha em <b>.json</b>.</li>
+            <li><b>As imagens ficam num armazenamento público</b> com endereços longos e imprevisíveis. Só quem tem o link direto consegue abrir a imagem. Não suba nada que precise ser realmente secreto como imagem.</li>
+        </ul>
+    </div>
+
+    <div class="passo">
+        <h2>Próxima etapa: o bot</h2>
+        <p style="margin:0">Ainda não ligamos o bot do Discord à rede. Quando você quiser, me conte em que linguagem ele foi feito e como guarda as fichas. Aí desenhamos avisos automáticos de post novo no canal e comandos como <code>/ficha</code>.</p>
+    </div>
+</main>
+</body>
+</html>
